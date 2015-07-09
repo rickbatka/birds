@@ -2,15 +2,20 @@
 using System.Collections;
 using Assets;
 using UnityEngine.UI;
+using System;
 
 public class aimcannon : MonoBehaviour {
+	public Rigidbody2D CannonballPrefab;
+	public float ShotVelocityModifier = 5000;
 	bool isAiming = false;
-	CircleCollider2D collider;
+	CircleCollider2D cannonCollider;
+	Rigidbody2D cannonBall;
 	Text debugText;
+	
 	// Use this for initialization
 	void Start () 
 	{
-		collider = this.GetComponent<CircleCollider2D>();
+		cannonCollider = this.GetComponent<CircleCollider2D>();
 		debugText = GameObject.Find("debug-text").GetComponent<Text>();
 	}
 	
@@ -20,12 +25,13 @@ public class aimcannon : MonoBehaviour {
 		debugText.text = string.Empty;
 
 		var mousePos2d = Camera.main.ScreenToWorldPoint(Input.mousePosition).FlattenZ();
-		if (Input.GetMouseButtonDown(0))
+		if (!isAiming && Input.GetMouseButtonDown(0))
 		{
-			if (collider.bounds.Contains(mousePos2d))
+			if (cannonCollider.bounds.Contains(mousePos2d))
 			{
 				isAiming = true;
 				debugText.text = "aim?y";
+				cannonBall = (Rigidbody2D)Instantiate(CannonballPrefab, mousePos2d.FlattenZ(), cannonCollider.transform.rotation);
 			}
 		}
 
@@ -33,11 +39,27 @@ public class aimcannon : MonoBehaviour {
 		{
 			isAiming = false;
 			debugText.text = "aim?n";
+			cannonBall.AddForce((cannonCollider.transform.position - mousePos2d) * ShotVelocityModifier);
+			cannonBall = null;
 		}
 
 		if (isAiming && Input.GetMouseButton(0))
 		{
-			debugText.text += "pos x:" + mousePos2d.x + " y:" + mousePos2d.y;
+			var positionRelativeToCannon = mousePos2d - cannonCollider.transform.position;
+			var allowedDistance = Vector3.ClampMagnitude(positionRelativeToCannon, 2*cannonCollider.radius);
+			cannonBall.transform.position = cannonCollider.transform.position + allowedDistance;
 		}
+	}
+
+
+
+	private float Clamp(float value, float min, float max)  
+	{  
+		return (value < min) ? min : (value > max) ? max : value;  
+	}
+
+	private double RadianToDegree(double angle)
+	{
+		return angle * (180.0 / Math.PI);
 	}
 }
