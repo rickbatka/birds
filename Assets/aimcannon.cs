@@ -35,23 +35,25 @@ public class aimcannon : MonoBehaviour {
 			}
 		}
 
-		if (isAiming && !Input.GetMouseButton(0))
-		{
-			isAiming = false;
-			debugText.text = "aim?n";
-			cannonBall.AddForce((cannonCollider.transform.position - mousePos2d) * ShotVelocityModifier);
-			cannonBall = null;
-		}
-
-		if (isAiming && Input.GetMouseButton(0))
+		if (isAiming)
 		{
 			var positionRelativeToCannon = mousePos2d - cannonCollider.transform.position;
-			var allowedDistance = Vector3.ClampMagnitude(positionRelativeToCannon, 2*cannonCollider.radius);
-			cannonBall.transform.position = cannonCollider.transform.position + allowedDistance;
+			var allowedDistance = Vector3.ClampMagnitude(positionRelativeToCannon, 2 * cannonCollider.radius);
+			var clampedPosition = cannonCollider.transform.position + allowedDistance;
+
+			if (Input.GetMouseButton(0))
+			{
+				cannonBall.transform.position = clampedPosition;
+			}
+			else
+			{
+				isAiming = false;
+				debugText.text = "aim?n";
+				cannonBall.AddForce((cannonCollider.transform.position - clampedPosition) * ShotVelocityModifier);
+				cannonBall = null;
+			}
 		}
 	}
-
-
 
 	private float Clamp(float value, float min, float max)  
 	{  
