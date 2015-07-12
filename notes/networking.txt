@@ -1,0 +1,22 @@
+Back end manages ongoing game rooms
+custom rest svc
+after taking turn, post turn replay data and final game state to server
+In-game:
+Game state is loaded
+cards part of turn happpens without recording
+recorder turned on at beginning of shooting phase
+every prefab that should be recorded has the "record-me" script, which calls into singleton repo. objects persist their transform/rotation(/velocity?) at fixed interval (if different)
+also needs to record their first appearance and destruction events
+can be extended to save / load extra parameters that may be needed
+additionally save one-off events like playSound, emit particles, etc.
+detect end-of-turn (might be tricky), then upload to server and go to sleep
+Playback:
+before turn, watch other player's last turn
+delete all objects, load replay state into scene
+disable all input. kill the physics engine?
+while(replay not fininshed): 
+object.lerp(oldPosition, newPosition) - maybe no lerp needed?
+play sounds / emitters when encountered
+spawn prefabs when needed (obey custom creation logic if present)
+destroy when needed
+spawning and destroying should accommodate the destructible terrain - I hope
