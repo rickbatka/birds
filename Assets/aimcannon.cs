@@ -22,16 +22,15 @@ public class aimcannon : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		debugText.text = string.Empty;
-
 		var mousePos2d = Camera.main.ScreenToWorldPoint(Input.mousePosition).FlattenZ();
 		if (!isAiming && Input.GetMouseButtonDown(0))
 		{
 			if (cannonCollider.bounds.Contains(mousePos2d))
 			{
 				isAiming = true;
-				debugText.text = "aim?y";
+				//debugText.text = "aim?y";
 				cannonBall = (Rigidbody2D)Instantiate(CannonballPrefab, mousePos2d.FlattenZ(), cannonCollider.transform.rotation);
+				cannonBall.isKinematic = true;
 			}
 		}
 
@@ -42,11 +41,15 @@ public class aimcannon : MonoBehaviour {
 			var clampedPosition = cannonCollider.transform.position + allowedDistance;
 			cannonBall.transform.position = clampedPosition;
 
+			debugText.text = "ball " + cannonBall.transform.position.ToString();
+
 			if (!Input.GetMouseButton(0))
 			{
 				isAiming = false;
-				debugText.text = "aim?n";
-				cannonBall.AddForce((cannonCollider.transform.position - clampedPosition) * ShotVelocityModifier);
+				cannonBall.isKinematic = false;
+				var shotForce = (cannonCollider.transform.position - clampedPosition) * ShotVelocityModifier;
+				debugText.text = "shot " + shotForce.ToString();
+				cannonBall.AddForce(shotForce);
 				cannonBall = null;
 			}
 		}
