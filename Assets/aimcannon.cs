@@ -3,6 +3,7 @@ using System.Collections;
 using Assets;
 using UnityEngine.UI;
 using System;
+using Assets.Aiming;
 
 public class aimcannon : MonoBehaviour {
 	public Rigidbody2D CannonballPrefab;
@@ -11,12 +12,14 @@ public class aimcannon : MonoBehaviour {
 	CircleCollider2D cannonCollider;
 	Rigidbody2D cannonBall;
 	Text debugText;
+	AimingLine _aimingLine;
 	
 	// Use this for initialization
 	void Start () 
 	{
 		cannonCollider = this.GetComponent<CircleCollider2D>();
 		debugText = GameObject.Find("debug-text").GetComponent<Text>();
+		_aimingLine = GetComponent<AimingLine>();
 	}
 	
 	// Update is called once per frame
@@ -41,17 +44,25 @@ public class aimcannon : MonoBehaviour {
 			var clampedPosition = cannonCollider.transform.position + allowedDistance;
 			cannonBall.transform.position = clampedPosition;
 
-			debugText.text = "ball " + cannonBall.transform.position.ToString();
+			var difference = (cannonCollider.transform.position - clampedPosition); 
+			var direction = difference.normalized;
+			var speed = difference.magnitude;
+			var shotVelocity = direction * speed * ShotVelocityModifier;
+
+			_aimingLine.UpdateTrajectory(clampedPosition, shotVelocity);
 
 			if (!Input.GetMouseButton(0))
 			{
 				isAiming = false;
 				cannonBall.isKinematic = false;
-				var shotForce = (cannonCollider.transform.position - clampedPosition) * ShotVelocityModifier;
-				debugText.text = "shot " + shotForce.ToString();
-				cannonBall.AddForce(shotForce);
+				debugText.text = "shot " + shotVelocity.ToString();
+				cannonBall.velocity = shotVelocity;
 				cannonBall = null;
 			}
+		}
+		else
+		{
+			_aimingLine.kill();
 		}
 	}
 
