@@ -40,7 +40,7 @@ public class aimcannon : MonoBehaviour {
 		if (isAiming)
 		{
 			var positionRelativeToCannon = mousePos2d - cannonCollider.transform.position;
-			var allowedDistance = Vector3.ClampMagnitude(positionRelativeToCannon, 2 * cannonCollider.radius);
+			var allowedDistance = Vector3.ClampMagnitude(positionRelativeToCannon, 3 * cannonCollider.radius);
 			var clampedPosition = cannonCollider.transform.position + allowedDistance;
 			cannonBall.transform.position = clampedPosition;
 
