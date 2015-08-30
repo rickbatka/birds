@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Cards.CardBehaviors;
 
 namespace Assets.Cards
 {
@@ -16,7 +17,7 @@ namespace Assets.Cards
 		public string Name { get { return "Extra Power"; } }
 		public string Use()
 		{
-
+			
 			return "Next shot power up!";
 		}
 	}
