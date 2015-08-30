@@ -1,0 +1,19 @@
+resource: pp
+
+start with 5 pp
+start with 4 cards
+cards have a cost (usually 1 or 2 pp)
+one shot per turn
+	card can give you more shots - for a cost
+regen 1 pp per turn
+	card can be used: 3 additional pp over next 3 turns (something like that) ('urn of flowing power')
+players are positioned on islands floating in the sky
+players are hard to move (really heavy) and have health
+players die when health is empty or they fall off their island
+games are async and should therefore be < 10 total turns (tweak this obv)
+players can shoot through their own defenses - important! maybe show your base as partially transparent while shooting
+player health starts at 100, most basic vanilla attack does 10 damage.
+	cards to regain 15-25 health
+	cards can give more powerful shots to do more damage
+	damage-over-time effects that do around 5% for x number of turns
+can have lots of games going at once
