@@ -3,18 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Global;
 using UnityEngine;
 
 namespace Assets.Cards
 {
-	class CardManager
+	class CardDrawer : MonoBehaviour
 	{
 		GameObject CardCanvas;
 		Vector3 hideByMoving = new Vector3(18, 0, 0);
 		Vector3 activatedPosition;
-		public CardManager(GameObject cardCanvas)
+
+		void Awake()
 		{
-			CardCanvas = cardCanvas;
+			CardCanvas = this.gameObject;
 			activatedPosition = CardCanvas.transform.position;
 			Deactivate();
 		}
@@ -24,7 +26,8 @@ namespace Assets.Cards
 			CardCanvas.transform.position = activatedPosition;
 			CardCanvas.transform.position -= hideByMoving;
 			CardCanvas.SetActive(true);
-			for (int i = 0; i < 4; i++)
+
+			foreach (var card in GameState.LocalPlayer.Cards)
 			{
 
 			}

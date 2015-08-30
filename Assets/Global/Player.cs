@@ -1,23 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Assets.Cards.CardBehaviors;
+using Assets.CardViewModels;
 using UnityEngine;
 
 namespace Assets.Global
 {
-	class Player : MonoBehaviour
+	public class Player : MonoBehaviour
 	{
 		public int PlayerNum;
 		public int StartingHealth;
 		public int ShotPowerDamage;
 
 		public int CurrentHealth { get; private set; }
+		public List<ICardViewModel> Cards;
 
-		void Start() 
+		void Awake() 
 		{
 			CurrentHealth = StartingHealth;
+			Cards = new List<ICardViewModel>();
 		}
 
 		void Update() 

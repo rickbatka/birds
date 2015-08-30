@@ -8,13 +8,9 @@ namespace Assets.Global
 	static class GameState
 	{
 		private static State State = AllGameStates.MyTurn_Battleground;
-		public static StateNames CurrentStateName
-		{
-			get
-			{
-				return State.StateName;
-			}
-		}
+		public static StateNames CurrentStateName { get { return State.StateName; } }
+		
+		public static Player LocalPlayer;
 
 		public static bool CantransitionTo(State toState)
 		{

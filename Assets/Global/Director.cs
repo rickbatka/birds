@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Linq;
 using Assets.Cards.CardBehaviors;
+using Assets.CardViewModels;
 
 namespace Assets.Global
 {
@@ -10,18 +11,24 @@ namespace Assets.Global
 		public GameObject Player1GameObject;
 		public GameObject Player2GameObject;
 
-		Player Player1;
-		Player Player2;
-		CardManager CardManager;
+		Player _player1;
+		Player _player2;
+		Player _localPlayer;
 
 		void Awake()
 		{
-			CardManager = new CardManager(GameObject.Find("CardCanvas"));
 			var players = GameObject.FindGameObjectsWithTag("Player");
 			Player1GameObject = players.First(p => p.name.ToLower() == "player1");
 			Player2GameObject = players.First(p => p.name.ToLower() == "player2");
-			Player1 = Player1GameObject.GetComponent<Player>();
-			Player2 = Player2GameObject.GetComponent<Player>();
+			_player1 = Player1GameObject.GetComponent<Player>();
+			_player2 = Player2GameObject.GetComponent<Player>();
+
+			// todo net
+			_localPlayer = _player1;
+
+			//todo gamestart
+			GameState.LocalPlayer = _localPlayer;
+			_player1.Cards.Add(new CardExtraPower());
 		}
 
 		void Update()
@@ -31,12 +38,10 @@ namespace Assets.Global
 				if (GameState.CantransitionTo(AllGameStates.MyTurn_Battleground))
 				{
 					GameState.TransitionTo(AllGameStates.MyTurn_Battleground);
-					CardManager.Deactivate();
 				}
 				else if (GameState.CantransitionTo(AllGameStates.MyTurn_Cards))
 				{
 					GameState.TransitionTo(AllGameStates.MyTurn_Cards);
-					CardManager.Activate();
 				}
 			}
 

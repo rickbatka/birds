@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assets.Cards.CardBehaviors;
+using UnityEngine;
 
-namespace Assets.Cards
+namespace Assets.CardViewModels
 {
-	interface ICard
+	public interface ICardViewModel
 	{
 		string Name { get; }
 		string Use();
 	}
 
-	class CardExtraPower : ICard
+	public class CardExtraPower : ICardViewModel
 	{
 		public string Name { get { return "Extra Power"; } }
 		public string Use()
 		{
-			
 			return "Next shot power up!";
 		}
 	}
