@@ -10,6 +10,8 @@ namespace Assets.Global
 	{
 		public GameObject Player1GameObject;
 		public GameObject Player2GameObject;
+		public GameObject CardsCanvas;
+		CardDrawer CardsDrawer;
 
 		Player _player1;
 		Player _player2;
@@ -22,13 +24,17 @@ namespace Assets.Global
 			Player2GameObject = players.First(p => p.name.ToLower() == "player2");
 			_player1 = Player1GameObject.GetComponent<Player>();
 			_player2 = Player2GameObject.GetComponent<Player>();
-
+			CardsDrawer = CardsCanvas.GetComponent<CardDrawer>();
 			// todo net
 			_localPlayer = _player1;
 
 			//todo gamestart
 			GameState.LocalPlayer = _localPlayer;
 			_player1.Cards.Add(new CardExtraPower());
+		}
+
+		void Start() {
+		
 		}
 
 		void Update()
@@ -38,10 +44,12 @@ namespace Assets.Global
 				if (GameState.CantransitionTo(AllGameStates.MyTurn_Battleground))
 				{
 					GameState.TransitionTo(AllGameStates.MyTurn_Battleground);
+					CardsDrawer.Deactivate();
 				}
 				else if (GameState.CantransitionTo(AllGameStates.MyTurn_Cards))
 				{
 					GameState.TransitionTo(AllGameStates.MyTurn_Cards);
+					CardsDrawer.Activate();
 				}
 			}
 
