@@ -30,7 +30,6 @@ namespace Assets.Global
 
 			//todo gamestart
 			GameState.LocalPlayer = _localPlayer;
-			_player1.Cards.Add(new CardExtraPower());
 		}
 
 		void Start() {
@@ -55,7 +54,8 @@ namespace Assets.Global
 
 			if (Input.GetKeyDown(KeyCode.E))
 			{
-				Player1GameObject.AddComponent<CB_ExtraPower>();
+				//Player1GameObject.AddComponent<CB_ExtraPower>();
+				_player1.Cards.Add(new CardExtraPower());
 			}
 		}
 	}

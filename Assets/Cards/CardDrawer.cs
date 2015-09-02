@@ -33,6 +33,7 @@ namespace Assets.Cards
 			foreach (var card in GameState.LocalPlayer.Cards)
 			{
 				var newCard = Instantiate(CardPrefab);
+				newCard.GetComponent<CardController>().Card = card;
 				newCard.SetParent(CardsPanel.transform, false);
 			}
 
@@ -48,6 +49,12 @@ namespace Assets.Cards
 		public void Deactivate()
 		{
 			CardCanvas.SetActive(false);
+			var childrenToDelete = new List<GameObject>();
+			foreach (Transform child in CardsPanel.transform)
+			{
+				childrenToDelete.Add(child.gameObject);
+			}
+			childrenToDelete.ForEach(child => GameObject.Destroy(child));
 		}
 
 	}

@@ -11,13 +11,9 @@ namespace Assets.Cards
 
 		private Text HeaderText;
 
-		void Awake()
-		{
-			HeaderText = this.transform.Find("header").Find("headertext").GetComponent<Text>();
-		}
-
 		void Start() 
 		{
+			HeaderText = this.GetComponentsInChildren<Text>().First(t => t.name == "headertext");
 			HeaderText.text = Card.Name;
 		}
 
