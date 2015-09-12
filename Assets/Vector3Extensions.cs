@@ -12,6 +12,5 @@ namespace Assets
 		{
 			return new Vector3(self.x, self.y, 0);
 		}
-
 	}
 }

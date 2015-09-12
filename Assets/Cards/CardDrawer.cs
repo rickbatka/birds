@@ -15,7 +15,8 @@ namespace Assets.Cards
 		GameObject CardsPanel;
 		Vector3 hideByMoving = new Vector3(18, 0, 0);
 		Vector3 activatedPosition;
-
+		int CardPlacementOffset = 200;
+		
 		void Awake()
 		{
 			CardCanvas = this.gameObject;
@@ -30,11 +31,12 @@ namespace Assets.Cards
 			CardCanvas.transform.position -= hideByMoving;
 			CardCanvas.SetActive(true);
 
-			foreach (var card in GameState.LocalPlayer.Cards)
+			for(int i = 0; i < GameState.LocalPlayer.Cards.Count; i++)
 			{
 				var newCard = Instantiate(CardPrefab);
-				newCard.GetComponent<CardController>().Card = card;
+				newCard.GetComponent<CardController>().Card = GameState.LocalPlayer.Cards[i];
 				newCard.SetParent(CardsPanel.transform, false);
+				newCard.transform.localPosition += new Vector3(i*CardPlacementOffset, 0, 1);
 			}
 
 			iTween.MoveTo(CardCanvas, new Hashtable()

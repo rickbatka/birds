@@ -24,7 +24,7 @@ director (singleton): controls flow between state, loads and transitions scenes,
 
 main menu -> new game
 	choose opponent
-	dice rool for p1 / p2 (who goes first) (maybe host sould get to go first)
+	dice roll for p1 / p2 (who goes first) (maybe host sould get to go first)
 	loadscene
 	gamestart
 	goto taketurn / notmyturn
