@@ -733,7 +733,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player1GameObject: {fileID: 1098481245}
   Player2GameObject: {fileID: 247830562}
-  CardsCanvas: {fileID: 1570426793}
 --- !u!1 &1070031697
 GameObject:
   m_ObjectHideFlags: 0
