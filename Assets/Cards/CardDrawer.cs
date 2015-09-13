@@ -16,6 +16,7 @@ namespace Assets.Cards
 		Vector3 hideByMoving = new Vector3(18, 0, 0);
 		Vector3 activatedPosition;
 		int CardPlacementOffset = 200;
+		bool isCardDrawerActive = false;
 		
 		void Awake()
 		{
@@ -24,12 +25,30 @@ namespace Assets.Cards
 			activatedPosition = CardCanvas.transform.position;
 			Deactivate();
 		}
+		
+		void Update(){
+			//react to relevant state changes
+			if(!isCardDrawerActive && isCardsLikeState())
+			{
+				Activate();
+			}
+			
+			if(isCardDrawerActive && !isCardsLikeState())
+			{
+				Deactivate();
+			}
+		}
+		
+		private bool isCardsLikeState(){
+			return GameState.CurrentStateName == StateNames.myturn_cards || GameState.CurrentStateName == StateNames.theirturn_cards;
+		}
 
 		public void Activate()
 		{
 			CardCanvas.transform.position = activatedPosition;
 			CardCanvas.transform.position -= hideByMoving;
-			CardCanvas.SetActive(true);
+			isCardDrawerActive = true;
+			//CardCanvas.SetActive(true);
 
 			for(int i = 0; i < GameState.LocalPlayer.Cards.Count; i++)
 			{
@@ -50,7 +69,8 @@ namespace Assets.Cards
 
 		public void Deactivate()
 		{
-			CardCanvas.SetActive(false);
+			//CardCanvas.SetActive(false);
+			isCardDrawerActive = false;
 			var childrenToDelete = new List<GameObject>();
 			foreach (Transform child in CardsPanel.transform)
 			{
