@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Cards.CardBehaviors;
-using Assets.CardViewModels;
+using Assets.CardModels;
 using UnityEngine;
 
 namespace Assets.Global
@@ -12,12 +12,12 @@ namespace Assets.Global
 		public int ShotPowerDamage;
 
 		public int CurrentHealth { get; private set; }
-		public List<ICardViewModel> Cards;
+		public List<ICardModel> Cards;
 
 		void Awake() 
 		{
 			CurrentHealth = StartingHealth;
-			Cards = new List<ICardViewModel>();
+			Cards = new List<ICardModel>();
 		}
 
 		void Update() 

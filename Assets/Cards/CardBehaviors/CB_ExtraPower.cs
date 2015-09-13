@@ -16,6 +16,7 @@ namespace Assets.Cards.CardBehaviors
 		protected abstract void Update();
 		
 		protected abstract void OnTurnCompletingBegin();
+		protected abstract void OnTurnLastTurnCompleted();
 
 		private void Awake() 
 		{
@@ -29,6 +30,7 @@ namespace Assets.Cards.CardBehaviors
 			TurnsLeft--;
 			if (TurnsLeft <= 0)
 			{
+				OnTurnLastTurnCompleted();
 				Destroy(this);
 			}
 			Debug.Log("card turn completing");
@@ -39,11 +41,12 @@ namespace Assets.Cards.CardBehaviors
 	{
 		private Player player;
 		protected override int TurnsToLive { get { return 2; } }
-		
+		private const int SHOT_POWER_MODIFIER = 25;
+
 		protected override void Start() 
 		{
 			player = gameObject.GetComponent<Player>();
-			player.ShotPowerDamage += 25;
+			player.ShotPowerDamage += SHOT_POWER_MODIFIER;
 		}
 
 		protected override void Update() { }
@@ -51,6 +54,11 @@ namespace Assets.Cards.CardBehaviors
 		protected override void OnTurnCompletingBegin()
 		{
 			Debug.Log("shot card turn ended");
+		}
+
+		protected override void OnTurnLastTurnCompleted()
+		{
+			player.ShotPowerDamage -= SHOT_POWER_MODIFIER;
 		}
 	}
 }

@@ -53,7 +53,9 @@ namespace Assets.Cards
 			for(int i = 0; i < GameState.LocalPlayer.Cards.Count; i++)
 			{
 				var newCard = Instantiate(CardPrefab);
-				newCard.GetComponent<CardController>().Card = GameState.LocalPlayer.Cards[i];
+				var newCardController = newCard.GetComponent<CardController>();
+				newCardController.Card = GameState.LocalPlayer.Cards[i];
+				newCardController.Player = GameState.LocalPlayer;
 				newCard.SetParent(CardsPanel.transform, false);
 				newCard.transform.localPosition += new Vector3(i*CardPlacementOffset, 0, 1);
 			}

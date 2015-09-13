@@ -1,13 +1,15 @@
-﻿using Assets.CardViewModels;
+﻿using Assets.CardModels;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using Assets.Global;
 
 namespace Assets.Cards
 {
 	public class CardController : MonoBehaviour
 	{
-		public ICardViewModel Card;
+		public ICardModel Card;
+		public Player Player;
 
 		private Text HeaderText;
 		private Button PlayButton;
@@ -23,6 +25,11 @@ namespace Assets.Cards
 		public void HandleClick()
 		{
 			Debug.Log("clicked me: " + this.GetInstanceID());
+			Card.Use();
+
+			//remove card fomr hand and destroy card viewmodel
+			Player.Cards.Remove(Card);
+			Destroy(this.gameObject);
 		}
 
 	}

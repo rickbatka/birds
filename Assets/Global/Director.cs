@@ -1,7 +1,7 @@
 ﻿using Assets.Cards;
 using UnityEngine;
 using System.Linq;
-using Assets.CardViewModels;
+using Assets.CardModels;
 using System.Collections.Generic;
 
 namespace Assets.Global
@@ -33,9 +33,9 @@ namespace Assets.Global
 			Player1GameObject = players.First(p => p.name.ToLower() == "player1");
 			Player2GameObject = players.First(p => p.name.ToLower() == "player2");
 			player1 = Player1GameObject.GetComponent<Player>();
-			player1.Cards = dealCards();
+			player1.Cards = dealCards(player1);
 			player2 = Player2GameObject.GetComponent<Player>();
-			player2.Cards = dealCards();
+			player2.Cards = dealCards(player2);
 			GameState.LocalPlayer = NewGameInfo.LocalPlayerNumber == 1 ? player1 : player2;
 			
 			var initialState = NewGameInfo.LocalPlayerNumber == NewGameInfo.NextUpPlayer ? AllGameStates.MyTurn_Cards : AllGameStates.TheirTurn_Battleground; 
@@ -44,8 +44,8 @@ namespace Assets.Global
 			
 		}
 		
-		private List<ICardViewModel> dealCards(){
-			return new List<ICardViewModel>{ new CardExtraPower() };
+		private List<ICardModel> dealCards(Player forPlayer){
+			return new List<ICardModel>{ new CardExtraPower(forPlayer) };
 		}
 		
 		void UnloadLevel()
@@ -66,12 +66,6 @@ namespace Assets.Global
 				{
 					GameState.State = AllGameStates.MyTurn_Cards;
 				}
-			}
-
-			if (Input.GetKeyDown(KeyCode.E))
-			{
-				//Player1GameObject.AddComponent<CB_ExtraPower>();
-				player1.Cards.Add(new CardExtraPower());
 			}
 		}
 	}
