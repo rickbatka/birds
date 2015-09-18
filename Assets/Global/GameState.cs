@@ -8,7 +8,7 @@ namespace Assets.Global
 {
 	public static class GameState
 	{
-		private static State _state;
+		private static State _state = AllGameStates.MyTurn_Battleground;
 		public static State State 
 		{
 			get

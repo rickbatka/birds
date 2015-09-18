@@ -4,6 +4,7 @@ using Assets;
 using UnityEngine.UI;
 using System;
 using Assets.Aiming;
+using Assets.Global;
 
 public class aimcannon : MonoBehaviour {
 	public Rigidbody2D CannonballPrefab;
@@ -26,7 +27,9 @@ public class aimcannon : MonoBehaviour {
 	void Update () 
 	{
 		var mousePos2d = Camera.main.ScreenToWorldPoint(Input.mousePosition).FlattenZ();
-		if (!isAiming && Input.GetMouseButtonDown(0))
+		if (!isAiming 
+			&& Input.GetMouseButtonDown(0) 
+			&& GameState.CurrentStateName == StateNames.myturn_battleground)
 		{
 			if (cannonCollider.bounds.Contains(mousePos2d))
 			{

@@ -31,7 +31,12 @@ namespace Assets.Global
 			// todo this is set from main menu before the leve loads
 			NewGameInfo = new NewGameInitInfo(localPlayerNumber: 1, nextUpPlayer: 1);
 			
-			if(!ThisLevelInitialized) //todo onlevelwasloaded
+			
+		}
+
+		void Start()
+		{
+			if (!ThisLevelInitialized) //todo onlevelwasloaded
 			{
 				InitLevel();
 			}

@@ -26,6 +26,7 @@ namespace Assets.Cards
 		{
 			Debug.Log("clicked me: " + this.GetInstanceID());
 			Card.Use();
+			Director.Instance.CardWasUsed(Player, this);
 
 			//remove card fomr hand and destroy card viewmodel
 			Player.Cards.Remove(Card);
