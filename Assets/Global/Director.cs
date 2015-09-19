@@ -28,6 +28,7 @@ namespace Assets.Global
 		
 		void Awake()
 		{
+			Application.targetFrameRate = 60;
 			// todo this is set from main menu before the leve loads
 			NewGameInfo = new NewGameInitInfo(localPlayerNumber: 1, nextUpPlayer: 1);
 			

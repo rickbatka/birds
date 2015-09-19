@@ -5,7 +5,7 @@ PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 7
   AndroidProfiler: 0
-  defaultScreenOrientation: 4
+  defaultScreenOrientation: 3
   targetDevice: 2
   targetResolution: 0
   accelerometerFrequency: 60
@@ -96,7 +96,7 @@ PlayerSettings:
     serializedVersion: 2
     m_Bits: 238
   iPhoneSdkVersion: 988
-  iPhoneTargetOSVersion: 22
+  iPhoneTargetOSVersion: 30
   uIPrerenderedIcon: 0
   uIRequiresPersistentWiFi: 0
   uIStatusBarHidden: 1
