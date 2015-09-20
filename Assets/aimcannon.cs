@@ -11,14 +11,12 @@ public class aimcannon : MonoBehaviour {
 	public float ShotVelocityModifier = 5000;
 	CircleCollider2D cannonCollider;
 	Rigidbody2D cannonBall;
-	Text debugText;
 	AimingLine _aimingLine;
 	
 	// Use this for initialization
 	void Start () 
 	{
 		cannonCollider = this.GetComponent<CircleCollider2D>();
-		debugText = GameObject.Find("debug-text").GetComponent<Text>();
 		_aimingLine = GetComponent<AimingLine>();
 	}
 	
@@ -54,7 +52,6 @@ public class aimcannon : MonoBehaviour {
 			{
 				InputManager.IsAiming = false;
 				cannonBall.isKinematic = false;
-				debugText.text = "shot " + shotVelocity.ToString();
 				cannonBall.velocity = shotVelocity;
 				cannonBall = null;
 			}

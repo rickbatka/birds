@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Global;
 using UnityEngine;
 
 namespace Assets.CameraScripts
 {
 	class PinchZoom : MonoBehaviour
 	{
-		public float orthoZoomSpeed = 0.02f;        // The rate of change of the orthographic size in orthographic mode.
+		public float OrthoZoomSpeed = 0.02f;        // The rate of change of the orthographic size in orthographic mode.
 		
 		void Update()
 		{
 			// If there are two touches on the device...
-			if (Input.touchCount == 2)
+			if (!InputManager.IsAiming
+				&& !InputManager.IsMouseDownInAimingZone()
+				&&!InputManager.IsCardOverlayBlockingGameInput()
+				&& Input.touchCount == 2)
 			{
 				var camera = Camera.main;
 				// Store both touches.
@@ -32,7 +36,7 @@ namespace Assets.CameraScripts
 				float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
 
 				// ... change the orthographic size based on the change in distance between the touches.
-				camera.orthographicSize += deltaMagnitudeDiff * orthoZoomSpeed;
+				camera.orthographicSize += deltaMagnitudeDiff * OrthoZoomSpeed;
 
 				// Make sure the orthographic size never drops below zero.
 				camera.orthographicSize = Mathf.Max(camera.orthographicSize, 0.1f);
