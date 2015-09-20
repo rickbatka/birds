@@ -20,6 +20,7 @@ namespace Assets.Cards
 			HeaderText.text = Card.Name;
 			PlayButton = this.GetComponentsInChildren<Button>().First(i => i.name == "PlayButton");
 			PlayButton.onClick.AddListener(HandleClick);
+			
 		}
 		
 		public void HandleClick()

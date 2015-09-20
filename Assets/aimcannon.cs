@@ -9,7 +9,6 @@ using Assets.Global;
 public class aimcannon : MonoBehaviour {
 	public Rigidbody2D CannonballPrefab;
 	public float ShotVelocityModifier = 5000;
-	bool isAiming = false;
 	CircleCollider2D cannonCollider;
 	Rigidbody2D cannonBall;
 	Text debugText;
@@ -27,20 +26,17 @@ public class aimcannon : MonoBehaviour {
 	void Update () 
 	{
 		var mousePos2d = Camera.main.ScreenToWorldPoint(Input.mousePosition).FlattenZ();
-		if (!isAiming 
-			&& Input.GetMouseButtonDown(0) 
-			&& GameState.CurrentStateName == StateNames.myturn_battleground)
+		if (!InputManager.IsAiming
+			&& GameState.CurrentStateName == StateNames.myturn_battleground
+			&& InputManager.IsMouseDownInAimingZone())
 		{
-			if (cannonCollider.bounds.Contains(mousePos2d))
-			{
-				isAiming = true;
-				//debugText.text = "aim?y";
-				cannonBall = (Rigidbody2D)Instantiate(CannonballPrefab, mousePos2d.FlattenZ(), cannonCollider.transform.rotation);
-				cannonBall.isKinematic = true;
-			}
+			InputManager.IsAiming = true;
+			//debugText.text = "aim?y";
+			cannonBall = (Rigidbody2D)Instantiate(CannonballPrefab, mousePos2d.FlattenZ(), cannonCollider.transform.rotation);
+			cannonBall.isKinematic = true;
 		}
 
-		if (isAiming)
+		if (InputManager.IsAiming)
 		{
 			var positionRelativeToCannon = mousePos2d - cannonCollider.transform.position;
 			var allowedDistance = Vector3.ClampMagnitude(positionRelativeToCannon, 3 * cannonCollider.radius);
@@ -56,7 +52,7 @@ public class aimcannon : MonoBehaviour {
 
 			if (!Input.GetMouseButton(0))
 			{
-				isAiming = false;
+				InputManager.IsAiming = false;
 				cannonBall.isKinematic = false;
 				debugText.text = "shot " + shotVelocity.ToString();
 				cannonBall.velocity = shotVelocity;

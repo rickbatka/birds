@@ -1302,7 +1302,9 @@ GameObject:
   - 92: {fileID: 2030444552}
   - 124: {fileID: 2030444551}
   - 81: {fileID: 2030444550}
+  - 50: {fileID: 2030444556}
   - 114: {fileID: 2030444555}
+  - 114: {fileID: 2030444557}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1389,6 +1391,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aff74d75bb7d14bd2a7cdfd369e25241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PanSpeed: .0199999996
+--- !u!50 &2030444556
+Rigidbody2D:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2030444549}
+  m_Mass: 1
+  m_LinearDrag: 10
+  m_AngularDrag: .0500000007
+  m_GravityScale: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &2030444557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2030444549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c961f00c2a6764f2f8bb96f8506eea4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orthoZoomSpeed: .0199999996
 --- !u!1001 &2093103983
 Prefab:
   m_ObjectHideFlags: 0
