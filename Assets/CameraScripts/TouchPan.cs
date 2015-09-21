@@ -7,65 +7,54 @@ namespace Assets.CameraScripts
 	public class TouchPan : MonoBehaviour
 	{
 		public float PanSpeed = 0.02f;
-		private bool IsPanning = false;
-		private Vector2 LastPosition;
+		private UnifiedInput inputManager;
+		private bool isPanning = false;
+		private Vector2 lastPosition;
 		private Rigidbody2D cameraRigidBody;
+		private Vector2 lastDelta;
 
-		private Vector2 LastDelta;
-
-		void Awake()
+		void Start()
 		{
 			cameraRigidBody = GetComponent<Rigidbody2D>();
-        }
+			inputManager = GameObject.Find("Director").GetComponent<UnifiedInput>();
+			inputManager.OnBackgroundDown += OnBackgroundDown;
+			inputManager.OnBackgroundMove += OnBackgroundMove;
+			inputManager.OnBackgroundUp += OnBackgroundUp;
+		}
+
+		void OnBackgroundDown(Vector2 pointerPosition)
+		{
+			var pointerPos2d = Camera.main.ScreenToWorldPoint(pointerPosition).FlattenZ();
+			isPanning = true;
+			lastPosition = pointerPos2d;
+		}
+
+		void OnBackgroundMove(Vector2 delta)
+		{
+			if (isPanning)
+			{
+				//var pointerPos2d = Camera.main.ScreenToWorldPoint(pointerPosition).FlattenZ();
+				//var delta = (Vector2)pointerPos2d - lastPosition;
+				var newPosition = new Vector3(-delta.x * PanSpeed, -delta.y * PanSpeed, 0);
+				transform.Translate(newPosition);
+				lastDelta = delta;
+				//lastPosition = pointerPos2d;
+			}
+		}
+
+		void OnBackgroundUp(Vector2 pointerPosition)
+		{
+			if (isPanning)
+			{
+				isPanning = false;
+				cameraRigidBody.AddForce(-lastDelta, ForceMode2D.Impulse);
+			}
+		}
 
 		// Update is called once per frame
 		void Update()
 		{
-			if (IsPanning && Input.touchCount > 0)
-			{
-				var delta = Input.touches[0].deltaPosition;
-				var newPosition = new Vector3(-delta.x * PanSpeed, -delta.y * PanSpeed, 0);
-				transform.Translate(newPosition);
-				LastDelta = delta;
-			}
 
-			if(IsPanning && Input.touches[0].phase == TouchPhase.Ended)
-			{
-				IsPanning = false;
-				cameraRigidBody.AddForce(-Input.touches[0].deltaPosition, ForceMode2D.Impulse);
-			}
-
-			if (!InputManager.IsAiming
-				&& !InputManager.IsMouseDownInAimingZone()
-				&& !InputManager.IsCardOverlayBlockingGameInput()
-				&& Input.touchCount > 0)
-			{
-				IsPanning = true;
-			}
-
-			//if (IsPanning && Input.GetMouseButton(0))
-			//{
-			//	Vector2 delta = LastPosition - (Vector2)Input.mousePosition;
-			//	// Move object across XY plane
-			//	transform.Translate(delta.x * PanSpeed, delta.y * PanSpeed, 0);
-			//	LastPosition = Input.mousePosition;
-			//}
-
-			//if(IsPanning && Input.GetMouseButtonUp(0))
-			//{
-			//	IsPanning = false;
-			//	Vector2 delta = LastPosition - (Vector2)Input.mousePosition;
-			//	cameraRigidBody.AddForce(delta, ForceMode2D.Impulse);
-			//}
-
-			//if (!InputManager.IsMouseDownInAimingZone() 
-			//	&& !InputManager.IsCardOverlayBlockingGameInput()
-			//	&& Input.GetMouseButtonDown(0))
-			//{
-			//	IsPanning = true;
-			//	//LastPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition).FlattenZ();
-			//	LastPosition = Input.mousePosition;
-			//}
 		}
 	}
 }
