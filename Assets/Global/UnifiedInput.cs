@@ -9,6 +9,9 @@ namespace Assets.Global
 	public delegate void OnBackgroundTouchDown(Vector2 screenPos);
 	public delegate void OnBackgroundTouchMove(Vector2 delta);
 	public delegate void OnBackgroundTouchUp(Vector2 screenPos);
+	public delegate void OnBackgroundSecondTouchDown(Vector2 screenPos);
+	public delegate void OnBackgroundSecondTouchMove(Vector2 delta);
+	public delegate void OnBackgroundSecondTouchUp(Vector2 screenPos);
 
 	interface IRawInputPointingDevice
 	{
@@ -16,9 +19,13 @@ namespace Assets.Global
 		bool GetDown();
 		bool GetMove();
 		bool GetUp();
-		bool HandledThisFrame();
+		bool GetSecondDown();
+		bool GetSecondMove();
+		bool GetSecondUp();
 		Vector2 GetScreenPosition();
+		Vector2 GetSecondFingerScreenPosition();
 		Vector2 GetDelta();
+		Vector2 GetSecondFingerDelta();
 	}
 
 	public class MouseInput : IRawInputPointingDevice
@@ -59,11 +66,6 @@ namespace Assets.Global
 			return Input.GetMouseButtonUp(0);
 		}
 
-		public bool HandledThisFrame()
-		{
-			return GetDown() || GetUp() || GetMove();
-		}
-
 		public Vector2 GetScreenPosition()
 		{
 			return Input.mousePosition;
@@ -78,87 +80,124 @@ namespace Assets.Global
 
 			return Vector2.zero;
 		}
+
+		public bool GetSecondDown() { return false; }
+		public bool GetSecondMove() { return false; }
+		public bool GetSecondUp() { return false; }
+		public Vector2 GetSecondFingerScreenPosition() { return Vector2.zero; }
+		public Vector2 GetSecondFingerDelta() { return Vector2.zero; }
 	}
 
 	public class TouchInput : IRawInputPointingDevice
 	{
-		Touch trackingTouch;
-		bool isTracking = false;
-		bool downThisFrame = false;
-		bool moveThisFrame = false;
-		bool upThisFrame = false;
+		Touch? FingerOne;
+		Touch? FingerTwo;
+		bool FirstDownThisFrame = false;
+		bool FirstMoveThisFrame = false;
+		bool FirstUpThisFrame = false;
+
+		bool SecondDownThisFrame = false;
+		bool SecondMoveThisFrame = false;
+		bool SecondUpThisFrame = false;
 
 		public void Update()
 		{
-			downThisFrame = moveThisFrame = upThisFrame = false;
+			FirstDownThisFrame = FirstMoveThisFrame = FirstUpThisFrame = false;
+			SecondDownThisFrame = SecondMoveThisFrame = SecondUpThisFrame = false;
 
-			if (Input.touchCount > 0)
+			foreach(var touch in Input.touches)
 			{
-				if (isTracking)
+				bool isFirst = (FingerOne != null && touch.fingerId == FingerOne.Value.fingerId);
+				if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
 				{
-					var currentTouch = Input.touches.First(t => t.fingerId == trackingTouch.fingerId);
-					trackingTouch = currentTouch;
-
-					if (currentTouch.phase == TouchPhase.Moved || currentTouch.phase == TouchPhase.Stationary)
+					if (isFirst)
 					{
-						moveThisFrame = true;
-                    }
-
-					if(currentTouch.phase == TouchPhase.Canceled || currentTouch.phase == TouchPhase.Ended)
+						FirstMoveThisFrame = true;
+					}
+					else
 					{
-						upThisFrame = true;
-						isTracking = false;
+						SecondMoveThisFrame = true;
 					}
 				}
-				else
+
+				if (touch.phase == TouchPhase.Canceled || touch.phase == TouchPhase.Ended)
 				{
-					if(Input.touches.Any(t => t.phase == TouchPhase.Began))
+					if (isFirst)
 					{
-						downThisFrame = true;
-						trackingTouch = Input.touches.First(t => t.phase == TouchPhase.Began);
-						isTracking = true;
-                    }
+						FirstUpThisFrame = true;
+						FingerOne = null;
+					}
+					else
+					{
+						SecondUpThisFrame = true;
+						FingerTwo = null;
+					}
+				}
+
+				if (touch.phase == TouchPhase.Began)
+				{
+					if (isFirst)
+					{
+						FirstDownThisFrame = true;
+						FingerOne = touch;
+					}
+					else
+					{
+						SecondDownThisFrame = true;
+						FingerTwo = touch;
+					}
 				}
 			}
-			else
-			{
-				isTracking = false;
-			}
-
 		}
 
 		public bool GetDown()
 		{
-			return downThisFrame;
+			return FirstDownThisFrame;
 		}
 
 		public bool GetMove()
 		{
-			return moveThisFrame;
+			return FirstMoveThisFrame;
         }
 
 		public bool GetUp()
 		{
-			return upThisFrame;
+			return FirstUpThisFrame;
         }
-		
-		public bool HandledThisFrame()
-		{
-			return downThisFrame || moveThisFrame || upThisFrame;
-		}
 
 		public Vector2 GetScreenPosition()
 		{
-			return trackingTouch.position;
+			return FingerOne != null ? FingerOne.Value.position : Vector2.zero;
 		}
 
 		public Vector2 GetDelta()
 		{
-			if (isTracking)
-			{
-				return trackingTouch.deltaPosition;
-			}
-			return Vector2.zero;
+			return FingerOne != null ? FingerOne.Value.deltaPosition : Vector2.zero;
+		}
+
+		public bool GetSecondDown()
+		{
+			return SecondDownThisFrame;
+		}
+
+		public bool GetSecondMove()
+		{
+			return SecondMoveThisFrame;
+		}
+
+		public bool GetSecondUp()
+		{
+			return SecondUpThisFrame;
+		}
+
+		public Vector2 GetSecondFingerScreenPosition()
+		{
+			return FingerTwo != null ? FingerTwo.Value.position : Vector2.zero;
+		}
+
+		public Vector2 GetSecondFingerDelta()
+		{
+			return FingerTwo != null ? FingerTwo.Value.deltaPosition : Vector2.zero;
 		}
 	}
 
@@ -168,6 +207,9 @@ namespace Assets.Global
 		public event OnBackgroundTouchDown OnBackgroundDown;
 		public event OnBackgroundTouchMove OnBackgroundMove;
 		public event OnBackgroundTouchUp OnBackgroundUp;
+		public event OnBackgroundSecondTouchDown OnBackgroundSecondDown;
+		public event OnBackgroundSecondTouchMove OnBackgroundSecondMove;
+		public event OnBackgroundSecondTouchUp OnBackgroundSecondUp;
 
 		private CircleCollider2D AimingZone;
 		private IRawInputPointingDevice[] inputs = new IRawInputPointingDevice[] {
@@ -185,6 +227,7 @@ namespace Assets.Global
 			foreach(var input in inputs)
 			{
 				input.Update();
+				
 				if (input.GetDown())
 				{
 					if (!IsCardOverlayBlockingGameInput())
@@ -214,9 +257,26 @@ namespace Assets.Global
 					}
 				}
 
-				if (input.HandledThisFrame())
+				if (input.GetSecondDown())
 				{
-					break;
+					if (!IsCardOverlayBlockingGameInput() && OnBackgroundSecondDown != null)
+					{
+						OnBackgroundSecondDown(input.GetSecondFingerScreenPosition());
+					}
+				}
+				else if (input.GetSecondMove())
+				{
+					if (!IsCardOverlayBlockingGameInput() && OnBackgroundSecondMove != null)
+					{
+						OnBackgroundSecondMove(input.GetSecondFingerDelta());
+					}
+				}
+				else if (input.GetSecondUp())
+				{
+					if (!IsCardOverlayBlockingGameInput() && OnBackgroundSecondUp != null)
+					{
+						OnBackgroundSecondUp(input.GetSecondFingerScreenPosition());
+					}
 				}
 			}
 		}

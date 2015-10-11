@@ -701,6 +701,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 937676980}
   - 114: {fileID: 937676981}
+  - 114: {fileID: 937676982}
   m_Layer: 0
   m_Name: Director
   m_TagString: Untagged
@@ -733,6 +734,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player1GameObject: {fileID: 1098481245}
   Player2GameObject: {fileID: 247830562}
+--- !u!114 &937676982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 937676979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9b961d01e960e046be3ec8e44509425, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsAiming: 0
 --- !u!1 &1070031697
 GameObject:
   m_ObjectHideFlags: 0
@@ -1391,7 +1404,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aff74d75bb7d14bd2a7cdfd369e25241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PanSpeed: .00999999978
+  PanSpeed: .0199999996
 --- !u!50 &2030444556
 Rigidbody2D:
   serializedVersion: 2

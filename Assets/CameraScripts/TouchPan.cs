@@ -33,12 +33,9 @@ namespace Assets.CameraScripts
 		{
 			if (isPanning)
 			{
-				//var pointerPos2d = Camera.main.ScreenToWorldPoint(pointerPosition).FlattenZ();
-				//var delta = (Vector2)pointerPos2d - lastPosition;
 				var newPosition = new Vector3(-delta.x * PanSpeed, -delta.y * PanSpeed, 0);
 				transform.Translate(newPosition);
 				lastDelta = delta;
-				//lastPosition = pointerPos2d;
 			}
 		}
 
@@ -49,12 +46,6 @@ namespace Assets.CameraScripts
 				isPanning = false;
 				cameraRigidBody.AddForce(-lastDelta, ForceMode2D.Impulse);
 			}
-		}
-
-		// Update is called once per frame
-		void Update()
-		{
-
 		}
 	}
 }
