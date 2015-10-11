@@ -22,6 +22,7 @@ namespace Assets.Global
 		bool GetSecondDown();
 		bool GetSecondMove();
 		bool GetSecondUp();
+		bool HandledMainInput();
 		Vector2 GetScreenPosition();
 		Vector2 GetSecondFingerScreenPosition();
 		Vector2 GetDelta();
@@ -81,6 +82,11 @@ namespace Assets.Global
 			return Vector2.zero;
 		}
 
+		public bool HandledMainInput()
+		{
+			return GetDown() || GetMove() || GetUp();
+		}
+
 		public bool GetSecondDown() { return false; }
 		public bool GetSecondMove() { return false; }
 		public bool GetSecondUp() { return false; }
@@ -107,36 +113,9 @@ namespace Assets.Global
 
 			foreach(var touch in Input.touches)
 			{
-				bool isFirst = (FingerOne != null && touch.fingerId == FingerOne.Value.fingerId);
-				if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
-				{
-					if (isFirst)
-					{
-						FirstMoveThisFrame = true;
-					}
-					else
-					{
-						SecondMoveThisFrame = true;
-					}
-				}
-
-				if (touch.phase == TouchPhase.Canceled || touch.phase == TouchPhase.Ended)
-				{
-					if (isFirst)
-					{
-						FirstUpThisFrame = true;
-						FingerOne = null;
-					}
-					else
-					{
-						SecondUpThisFrame = true;
-						FingerTwo = null;
-					}
-				}
-
 				if (touch.phase == TouchPhase.Began)
 				{
-					if (isFirst)
+					if (FingerOne == null)
 					{
 						FirstDownThisFrame = true;
 						FingerOne = touch;
@@ -145,6 +124,37 @@ namespace Assets.Global
 					{
 						SecondDownThisFrame = true;
 						FingerTwo = touch;
+					}
+				}
+				else
+				{
+					bool isFirst = (FingerOne != null && touch.fingerId == FingerOne.Value.fingerId);
+					if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
+					{
+						if (isFirst)
+						{
+							FingerOne = touch;
+							FirstMoveThisFrame = true;
+						}
+						else
+						{
+							FingerTwo = touch;
+							SecondMoveThisFrame = true;
+						}
+					}
+
+					if (touch.phase == TouchPhase.Canceled || touch.phase == TouchPhase.Ended)
+					{
+						if (isFirst)
+						{
+							FirstUpThisFrame = true;
+							FingerOne = null;
+						}
+						else
+						{
+							SecondUpThisFrame = true;
+							FingerTwo = null;
+						}
 					}
 				}
 			}
@@ -164,6 +174,11 @@ namespace Assets.Global
 		{
 			return FirstUpThisFrame;
         }
+
+		public bool HandledMainInput()
+		{
+			return GetDown() || GetMove() || GetUp();
+		}
 
 		public Vector2 GetScreenPosition()
 		{
@@ -277,6 +292,11 @@ namespace Assets.Global
 					{
 						OnBackgroundSecondUp(input.GetSecondFingerScreenPosition());
 					}
+				}
+
+				if (input.HandledMainInput())
+				{
+					break;
 				}
 			}
 		}
